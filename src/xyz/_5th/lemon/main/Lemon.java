@@ -43,6 +43,7 @@ public class Lemon extends JFrame {
 		add(scroll, BorderLayout.CENTER);
 		
 		area.setCodeFoldingEnabled(true);
+		codeFolded = true;
 
 		JMenuBar menu = new JMenuBar();
 		setJMenuBar(menu);
@@ -56,6 +57,8 @@ public class Lemon extends JFrame {
 		file.add(Save);
 		file.add(SaveAs);
 		file.add(Quit);
+		file.addSeparator();
+		file.add(CodeFolding);
 
 		setupSyntax(syntax);
 
@@ -92,6 +95,7 @@ public class Lemon extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		area.addKeyListener(k1);
+		area.addKeyListener(new Commands());
 		setTitle("Lemon | " + currentFile);
 	}
 
@@ -184,7 +188,21 @@ public class Lemon extends JFrame {
 				setTitle(getTitle() + " *");
 		}
 	};
-
+	
+	
+	boolean codeFolded = true;
+	Action CodeFolding = new AbstractAction("Toggle Folding"){
+		public void actionPerformed(ActionEvent e){
+			if(codeFolded){
+				area.setCodeFoldingEnabled(false);
+				codeFolded = false;
+			}else{
+				area.setCodeFoldingEnabled(true);
+				codeFolded = true;
+			}
+		}
+	};
+	
 	Action Open = new AbstractAction("Open", new ImageIcon("open.gif")) {
 		public void actionPerformed(ActionEvent e) {
 			saveOld();

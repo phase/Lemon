@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultEditorKit;
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 public class Lemon extends JFrame {
@@ -40,6 +41,8 @@ public class Lemon extends JFrame {
 		area.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		RTextScrollPane scroll = new RTextScrollPane(area, true);
 		add(scroll, BorderLayout.CENTER);
+		
+		area.setCodeFoldingEnabled(true);
 
 		JMenuBar menu = new JMenuBar();
 		setJMenuBar(menu);
@@ -94,15 +97,91 @@ public class Lemon extends JFrame {
 
 	private void setupSyntax(JMenu s) {
 		// TODO: Setup Syntax
-
+		addSyntax("None", s, SyntaxConstants.SYNTAX_STYLE_NONE);
+		s.addSeparator();
+		
+		JMenu sA = new JMenu("A");
+		addSyntax("ActionScript", sA, SyntaxConstants.SYNTAX_STYLE_ACTIONSCRIPT);
+		addSyntax("Assembler x86", sA, SyntaxConstants.SYNTAX_STYLE_ASSEMBLER_X86);
+		s.add(sA);
+		
+		addSyntax("BB Code", s, SyntaxConstants.SYNTAX_STYLE_BBCODE);
+		
+		JMenu sC = new JMenu("C");
+		addSyntax("C", sC, SyntaxConstants.SYNTAX_STYLE_C);
+		addSyntax("C++", sC, SyntaxConstants.SYNTAX_STYLE_CPLUSPLUS);
+		addSyntax("C#", sC, SyntaxConstants.SYNTAX_STYLE_CSHARP);
+		addSyntax("Clojure", sC, SyntaxConstants.SYNTAX_STYLE_CLOJURE);
+		addSyntax("CSS", sC, SyntaxConstants.SYNTAX_STYLE_CSS);
+		s.add(sC);
+		
+		JMenu sD = new JMenu("D");
+		addSyntax("D", sD, SyntaxConstants.SYNTAX_STYLE_D);
+		addSyntax("Dart", sD, SyntaxConstants.SYNTAX_STYLE_DART);
+		addSyntax("Delphi", sD, SyntaxConstants.SYNTAX_STYLE_DELPHI);
+		addSyntax("DTD", sD, SyntaxConstants.SYNTAX_STYLE_DTD);
+		s.add(sD);
+		
+		addSyntax("Fortran", s, SyntaxConstants.SYNTAX_STYLE_FORTRAN);
+		
+		addSyntax("Groovy", s, SyntaxConstants.SYNTAX_STYLE_GROOVY);
+		
+		JMenu sH = new JMenu("H");
+		addSyntax("Htaccess", sH, SyntaxConstants.SYNTAX_STYLE_HTACCESS);
+		addSyntax("HTML", sH, SyntaxConstants.SYNTAX_STYLE_HTML);
+		s.add(sH);
+		
+		JMenu sJ = new JMenu("J");
+		addSyntax("Java", sJ, SyntaxConstants.SYNTAX_STYLE_JAVA);
+		addSyntax("JavaScript", sJ, SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+		addSyntax("JSON", sJ, SyntaxConstants.SYNTAX_STYLE_JSON);
+		addSyntax("JSP", sJ, SyntaxConstants.SYNTAX_STYLE_JSP);
+		s.add(sJ);
+		
+		JMenu sL = new JMenu("L");
+		addSyntax("Latex", sL, SyntaxConstants.SYNTAX_STYLE_LATEX);
+		addSyntax("Lisp", sL, SyntaxConstants.SYNTAX_STYLE_LISP);
+		addSyntax("Lua", sL, SyntaxConstants.SYNTAX_STYLE_LUA);
+		s.add(sL);
+		
+		JMenu sM = new JMenu("M");
+		addSyntax("Makefile", sM, SyntaxConstants.SYNTAX_STYLE_MAKEFILE);
+		addSyntax("MXML", sM, SyntaxConstants.SYNTAX_STYLE_MXML);
+		s.add(sM);
+		
+		addSyntax("NSIS", s, SyntaxConstants.SYNTAX_STYLE_NSIS);
+		
+		JMenu sP = new JMenu("P");
+		addSyntax("Perl", sP, SyntaxConstants.SYNTAX_STYLE_PERL);
+		addSyntax("PHP", sP, SyntaxConstants.SYNTAX_STYLE_PHP);
+		addSyntax("Properties File", sP, SyntaxConstants.SYNTAX_STYLE_PROPERTIES_FILE);
+		addSyntax("Python", sP, SyntaxConstants.SYNTAX_STYLE_PYTHON);
+		s.add(sP);
+		
+		addSyntax("Ruby", s, SyntaxConstants.SYNTAX_STYLE_RUBY);
+		
+		JMenu sS = new JMenu("S");
+		addSyntax("SAS", sS, SyntaxConstants.SYNTAX_STYLE_SAS);
+		addSyntax("Scala", sS, SyntaxConstants.SYNTAX_STYLE_SCALA);
+		addSyntax("SQL", sS, SyntaxConstants.SYNTAX_STYLE_SQL);
+		s.add(sS);
 	}
-
+	
+	private void addSyntax(String name, JMenu s, final String syntax){
+		s.add(new AbstractAction(name){
+			public void actionPerformed(ActionEvent e){
+				area.setSyntaxEditingStyle(syntax);
+			}
+		});
+	}
+	
 	private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
 			changed = true;
 			Save.setEnabled(true);
 			SaveAs.setEnabled(true);
-			setTitle(getTitle() + " *");
+			if(!getTitle().contains("*") && !currentFile.equals("Untitled"))
+				setTitle(getTitle() + " *");
 		}
 	};
 

@@ -89,7 +89,7 @@ public class Lemon extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		area.addKeyListener(k1);
-		setTitle(currentFile);
+		setTitle("Lemon | " + currentFile);
 	}
 
 	private void setupSyntax(JMenu s) {
@@ -102,6 +102,7 @@ public class Lemon extends JFrame {
 			changed = true;
 			Save.setEnabled(true);
 			SaveAs.setEnabled(true);
+			setTitle(getTitle() + " *");
 		}
 	};
 
@@ -161,7 +162,7 @@ public class Lemon extends JFrame {
 			area.read(r, null);
 			r.close();
 			currentFile = fileName;
-			setTitle(currentFile);
+			setTitle("Lemon | " + currentFile);
 			changed = false;
 		} catch (IOException e) {
 			Toolkit.getDefaultToolkit().beep();
@@ -176,7 +177,7 @@ public class Lemon extends JFrame {
 			area.write(w);
 			w.close();
 			currentFile = fileName;
-			setTitle(currentFile);
+			setTitle("Lemon | " + currentFile);
 			changed = false;
 			Save.setEnabled(false);
 		} catch (IOException e) {

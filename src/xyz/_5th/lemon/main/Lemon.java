@@ -93,9 +93,6 @@ public class Lemon extends JFrame {
 //		paste.setText(null);
 //		paste.setIcon(new ImageIcon("paste.gif"));
 
-		Save.setEnabled(false);
-		SaveAs.setEnabled(false);
-
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		addKeyListener(k1);
@@ -105,8 +102,7 @@ public class Lemon extends JFrame {
 
 	private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			Save.setEnabled(true);
-			SaveAs.setEnabled(true);
+			currentFile.changed = true;
 			if(!getTitle().contains("*") && !currentFile.equals("Untitled"))
 				setTitle(getTitle() + " *");
 		}
@@ -130,7 +126,6 @@ public class Lemon extends JFrame {
 			if (dialog.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				readInFile(dialog.getSelectedFile().getAbsolutePath());
 			}
-			SaveAs.setEnabled(true);
 		}
 	};
 
@@ -167,7 +162,7 @@ public class Lemon extends JFrame {
 	}
 
 	private void saveOld() {
-		if (changed) {
+		if (currentFile.changed) {
 			if (JOptionPane.showConfirmDialog(this, "Would you like to save "
 					+ currentFile.getName() + "?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				saveFile(currentFile.getPath());
@@ -196,12 +191,11 @@ public class Lemon extends JFrame {
 	private void saveFile(String path) {
 		try {
 			FileWriter w = new FileWriter(path);
-			currentFile.getTextArea().write(w);
+			currentFile.getTextArea().write(w); //Writes text to file
 			w.close();
 			currentFile.setPath(path);
 			setTitle("Lemon | " + currentFile.getName());
 			changed = false;
-			Save.setEnabled(false);
 		} catch (IOException e) {
 		}
 	}

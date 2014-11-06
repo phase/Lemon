@@ -6,8 +6,8 @@ Lemon is an open source text editor with some cool features, like syntax highlig
 Features
 --------
 
-Numbered Lines: Lines on the side of the file are numbered.
+[ ] Numbered Lines: Lines on the side of the file are numbered.
 
-Code Folding: On the sidebar, there are buttons to fold code blocks, cleaning up code.
+[ ] Code Folding: On the sidebar, there are buttons to fold code blocks, cleaning up code.
 
-Syntax Highliting: The syntax for over 30 languages will have keywords highlighted.
+[X] Syntax Highliting: The syntax for over 30 languages will have keywords highlighted.

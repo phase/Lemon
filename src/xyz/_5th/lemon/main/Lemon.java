@@ -37,9 +37,10 @@ public class Lemon extends JFrame {
 	
 	static File currentFile;
 	static List<File> openFiles = new ArrayList<File>();
+	static String currentSyntax;
 	
 	private boolean changed = false;
-	private JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.WRAP_TAB_LAYOUT);
+	private JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
 	public Lemon() {
 		
@@ -54,6 +55,7 @@ public class Lemon extends JFrame {
 		JMenu file = new JMenu("File");
 		JMenu edit = new JMenu("Edit");
 		JMenu syntax = new JMenu("Syntax");
+		new Syntax().setupSyntax(syntax);
 		menu.add(file);
 		menu.add(edit);
 		menu.add(syntax);
@@ -98,23 +100,17 @@ public class Lemon extends JFrame {
 		pack();
 		addKeyListener(k1);
 		addKeyListener(new Commands());
-		setTitle("Lemon | " + currentFile);
+		setTitle("Lemon | " + currentFile.getName());
 	}
 
-	
-	
-	
-	
 	private KeyListener k1 = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			changed = true;
 			Save.setEnabled(true);
 			SaveAs.setEnabled(true);
 			if(!getTitle().contains("*") && !currentFile.equals("Untitled"))
 				setTitle(getTitle() + " *");
 		}
 	};
-	
 	
 	Action CodeFolding = new AbstractAction("Toggle Folding"){
 		public void actionPerformed(ActionEvent e){
@@ -140,7 +136,7 @@ public class Lemon extends JFrame {
 
 	Action Save = new AbstractAction("Save", new ImageIcon("save.gif")) {
 		public void actionPerformed(ActionEvent e) {
-			if (!currentFile.equals("Untitled"))
+			if (!currentFile.getName().equals("Untitled"))
 				saveFile(currentFile.getPath());
 			else
 				saveFileAs();
@@ -173,19 +169,22 @@ public class Lemon extends JFrame {
 	private void saveOld() {
 		if (changed) {
 			if (JOptionPane.showConfirmDialog(this, "Would you like to save "
-					+ currentFile + "?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+					+ currentFile.getName() + "?", "Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				saveFile(currentFile.getPath());
 		}
 	}
 
 	private void readInFile(String path) {
 		try {
+			if(fileOpen(path)) return;
 			FileReader r = new FileReader(path);
 			File f = new File(getFile(path), path);
 			tabs.add(getFile(path), f.getTextArea());
 			openFiles.add(f);
+			f.getTextArea().read(r, null);
 			tabs.setSelectedComponent(f.getTextArea());
 			currentFile = f;
+			f.getTextArea().setSyntaxEditingStyle(currentSyntax);
 			r.close();
 		} catch (IOException e) {
 			Toolkit.getDefaultToolkit().beep();
@@ -200,7 +199,7 @@ public class Lemon extends JFrame {
 			currentFile.getTextArea().write(w);
 			w.close();
 			currentFile.setPath(path);
-			setTitle("Lemon | " + currentFile);
+			setTitle("Lemon | " + currentFile.getName());
 			changed = false;
 			Save.setEnabled(false);
 		} catch (IOException e) {
@@ -216,8 +215,15 @@ public class Lemon extends JFrame {
 	}
 	
 	public String getFile(String path){
-		String[] a = path.split("/");
+		String[] a = path.split("\\\\");
 		return a[a.length-1];
+	}
+	
+	public boolean fileOpen(String path){
+		for(File f : openFiles)
+			if(f.getPath().equals(path))
+				return true;
+		return false;
 	}
 	
 }
